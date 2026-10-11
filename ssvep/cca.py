@@ -34,6 +34,7 @@ def cca_max_corr(x, y, n_components=1):
     nx = x.shape[0]
     z = np.vstack([x, y])
     cov = np.cov(z)
+    # 微小对角正则项避免通道共线时协方差矩阵不可逆。
     sxx = cov[:nx, :nx] + _EPS * np.eye(nx)
     syy = cov[nx:, nx:] + _EPS * np.eye(cov.shape[0] - nx)
     sxy = cov[:nx, nx:]
@@ -110,6 +111,7 @@ class FBCCAClassifier:
         if bands is None:
             bands = [(8.0 * n, 90.0) for n in range(1, n_subbands + 1)]
         self.bands = bands
+        # 低阶子带权重更高，同时保留高阶谐波对分类的补充作用。
         self.weights = np.array(
             [n ** (-weight_a) + weight_b for n in range(1, len(bands) + 1)]
         )

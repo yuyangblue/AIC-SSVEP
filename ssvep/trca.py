@@ -31,9 +31,11 @@ def _trca_spatial_filter(trials):
     s = np.zeros((n_ch, n_ch))
     q = np.zeros((n_ch, n_ch))
     for j in range(n_trial):
+        # Q 汇总每个试次自身的能量，作为空间滤波器的归一化约束。
         q += trials[j] @ trials[j].T / n_samp
         for j2 in range(n_trial):
             if j2 != j:
+                # S 只汇总不同试次的协方差，突出跨试次重复出现的信号。
                 s += trials[j] @ trials[j2].T / n_samp
     q += _EPS * np.eye(n_ch)
     eigvals, eigvecs = np.linalg.eig(np.linalg.inv(q) @ s)

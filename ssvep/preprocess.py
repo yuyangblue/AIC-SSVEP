@@ -30,6 +30,7 @@ def bandpass_filter(x, fs, low, high, order=4, axis=-1):
     b, a = _butter_bandpass_coeff(fs, low, high, order)
     # padlen 保护：数据太短时减小 pad
     padlen = min(3 * max(len(a), len(b)), x.shape[axis] - 1)
+    # 前向再反向滤波抵消相位偏移，适合离线 EEG 分析。
     return signal.filtfilt(b, a, x, axis=axis, padlen=padlen)
 
 
@@ -89,6 +90,7 @@ def epoch(continuous, triggers, fs, offset=0.14, duration=2.0, ch_axis=0):
     if ch_axis != 0:
         continuous = np.moveaxis(continuous, ch_axis, 0)
     n_ch, n_total = continuous.shape
+    # 秒数转换成采样点；round 减少浮点换算造成的边界偏差。
     s0 = int(round(offset * fs))
     win = int(round(duration * fs))
     epochs = []

@@ -31,6 +31,7 @@ def reference_signal(freq, fs, n_samples, n_harmonics=3, delay=0.0):
         Y，形状 (2*n_harmonics, n_samples)，行依次为
         sin(2πft),cos(2πft),sin(4πft),cos(4πft),...
     """
+    # 采样时刻从 0 开始；所有候选频率共用同一时间基准。
     t = np.arange(n_samples) / fs + delay
     rows = []
     for h in range(1, n_harmonics + 1):

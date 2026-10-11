@@ -79,6 +79,7 @@ def main():
     train_x, train_y, test_x, test_y = [], [], [], []
     for k in range(len(freqs)):
         idx = np.where(labels == k)[0]
+        # 每一类独立按 trial 序号切分，保证训练集和测试集都覆盖全部类别。
         train_x.extend(trials_bp[idx[:n_train]]); train_y.extend([k] * n_train)
         test_x.extend(trials_bp[idx[n_train:]]); test_y.extend([k] * (len(idx) - n_train))
     trca = TRCAClassifier(n_classes=len(freqs), ensemble=True)

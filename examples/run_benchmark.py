@@ -45,6 +45,7 @@ def build_epochs(data, freqs, tw, channels=OCCIPITAL_9):
     win = int(round(tw * FS))
     data = data[channels, s0:s0 + win, :, :]  # [C, T, 40, 6]
     n_ch, n_samp, n_target, n_block = data.shape
+    # 调整为 block 在前、目标在后，再展平成 trial 维，便于后续分折。
     x = np.transpose(data, (3, 2, 0, 1)).reshape(n_block * n_target, n_ch, n_samp)
     y = np.tile(np.arange(n_target), n_block)
     return x, y, n_target
@@ -89,6 +90,7 @@ def main():
     y_blocks = y.reshape(n_block, n_target)
     accs = []
     for b in range(n_block):
+        # 留出一个完整 block 测试，避免同一 block 的试次同时进入训练和测试。
         test_idx = [b]
         train_idx = [i for i in range(n_block) if i != b]
         tr_x = x_blocks[train_idx].reshape(-1, *x.shape[1:])

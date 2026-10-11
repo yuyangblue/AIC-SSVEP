@@ -34,7 +34,7 @@ def write_submission(predictions, out_path, template_path=None,
         assert len(df) == len(preds), \
             f"模板行数 {len(df)} 与预测数 {len(preds)} 不一致"
         if pred_column not in df.columns:
-            # 模板没有该列名时，默认写入最后一列之后
+            # 按模板的既有列布局，将预测写入最后一列而不新增列。
             pred_column = df.columns[-1]
         df[pred_column] = preds
         df.to_excel(out_path, index=False)

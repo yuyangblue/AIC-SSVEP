@@ -68,6 +68,7 @@ def probe_ndarray(name, arr, fs_hint=None, do_plot=False):
         row = row - row.mean()
         n = len(row)
         if n >= 64:
+            # Hann 窗减少有限长度信号的频谱泄漏，再用 rFFT 读取非负频率。
             spec = np.abs(np.fft.rfft(row * np.hanning(n))) ** 2
             freqs = np.fft.rfftfreq(n, 1.0 / fs_hint)
             idx = (freqs >= 1) & (freqs <= 60)
