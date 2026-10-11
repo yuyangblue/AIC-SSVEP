@@ -1,0 +1,8 @@
+# AIC 脑电 SSVEP 赛题备赛工程依赖
+# d2l 环境已自带全部依赖，本文件仅作记录；新建环境时执行：
+#   pip install -r requirements.txt
+numpy>=1.26
+scipy>=1.10
+pandas>=2.0
+matplotlib>=3.7
+openpyxl>=3.1
